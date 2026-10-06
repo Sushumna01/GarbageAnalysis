@@ -1,0 +1,26 @@
+# ── Node.js ──
+node_modules/
+.env
+npm-debug.log*
+
+# ── Python ──
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+venv/
+.venv/
+
+# ── ML artifacts ──
+ml/saved_model/
+ml/data/
+*.h5
+*.tflite
+
+# ── IDE / OS ──
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db

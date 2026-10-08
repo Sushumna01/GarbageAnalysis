@@ -1,34 +1,39 @@
 """
-Single-image prediction utility for GarbageAnalysis.
+Predict the waste category for one image using the trained model.
 
 Usage:
     python predict.py --image path/to/image.jpg
 """
 
 import argparse
+import json
+
+import numpy as np
 import tensorflow as tf
-from utils.preprocess import load_and_preprocess
-from config import MODEL_PATH, CLASS_NAMES
+from PIL import Image
+
+from config import CLASS_NAMES_PATH, IMG_SIZE, MODEL_PATH
 
 
 def predict(image_path: str):
-    """Load the saved model and predict the class of a single image."""
-
-    # Load model
+    """Load the trained model and predict a single image."""
+    with open(CLASS_NAMES_PATH, encoding="utf-8") as class_file:
+        class_names = json.load(class_file)
     model = tf.keras.models.load_model(MODEL_PATH)
 
-    # Preprocess image
-    img_array = load_and_preprocess(image_path)
+    image = Image.open(image_path).convert("RGB").resize((IMG_SIZE, IMG_SIZE))
+    image_array = np.expand_dims(np.asarray(image, dtype=np.float32), axis=0)
+    probabilities = model.predict(image_array, verbose=0)[0]
+    ranked_indices = np.argsort(probabilities)[::-1][:3]
+    predicted_class = class_names[int(ranked_indices[0])]
+    confidence = float(probabilities[ranked_indices[0]])
 
-    # Predict
-    predictions = model.predict(img_array)
-    class_index = predictions[0].argmax()
-    confidence = predictions[0][class_index]
-
-    print(f"Predicted class : {CLASS_NAMES[class_index]}")
+    print(f"Predicted class : {predicted_class}")
     print(f"Confidence      : {confidence:.2%}")
+    for index in ranked_indices:
+        print(f"  {class_names[int(index)]}: {probabilities[index]:.2%}")
 
-    return CLASS_NAMES[class_index], float(confidence)
+    return predicted_class, confidence
 
 
 if __name__ == "__main__":

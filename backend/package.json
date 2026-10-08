@@ -15,9 +15,12 @@
     "express": "^4.21.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.7.0",
-    "multer": "^2.0.2"
+    "multer": "^2.4.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.7"
+  },
+  "engines": {
+    "node": ">=18.18"
   }
 }

@@ -131,7 +131,7 @@ const classifyImage = async (req, res) => {
     return res.status(400).json({ message: "Please upload an image file." });
   }
 
-  const mlServiceUrl = (process.env.ML_SERVICE_URL || "http://localhost:8000").replace(/\/$/, "");
+  const mlServiceUrl = (process.env.ML_API_URL || "http://127.0.0.1:8000").replace(/\/$/, "");
 
   try {
     const formData = new FormData();

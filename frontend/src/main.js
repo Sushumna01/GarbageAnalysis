@@ -342,7 +342,7 @@ function setApiStatus(online, status = "offline") {
 
 async function checkApi() {
   try {
-    const response = await fetch("/api/ml/health", { signal: AbortSignal.timeout(5000) });
+    const response = await fetch("/api/ml/", { signal: AbortSignal.timeout(5000) });
     const status = await response.json().catch(() => ({}));
     if (response.ok) {
       setApiStatus(true);

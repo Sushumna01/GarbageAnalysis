@@ -17,7 +17,7 @@ const upload = multer({
 });
 
 router.get("/health", async (req, res) => {
-  const mlServiceUrl = (process.env.ML_SERVICE_URL || "http://localhost:8000").replace(/\/$/, "");
+  const mlServiceUrl = (process.env.ML_API_URL || "http://127.0.0.1:8000").replace(/\/$/, "");
   try {
     const response = await fetch(mlServiceUrl);
     const service = await response.json();

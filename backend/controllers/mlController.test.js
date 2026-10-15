@@ -25,12 +25,19 @@ const createRequest = () => ({
 
 test("returns normalized predictions and disposal guidance", async (context) => {
   const originalFetch = global.fetch;
+  const originalMlApiUrl = process.env.ML_API_URL;
   context.after(() => {
     global.fetch = originalFetch;
+    if (originalMlApiUrl === undefined) {
+      delete process.env.ML_API_URL;
+    } else {
+      process.env.ML_API_URL = originalMlApiUrl;
+    }
   });
 
+  process.env.ML_API_URL = "https://classifier.example.test/";
   global.fetch = async (url, options) => {
-    assert.equal(url, "http://localhost:8000/predict");
+    assert.equal(url, "https://classifier.example.test/predict");
     assert.equal(options.method, "POST");
     const uploadedFile = options.body.get("file");
     assert.equal(uploadedFile.name, "waste.jpg");
